@@ -15,3 +15,8 @@ git add .
 ```
 git commit -m "This is my first commit"
 ```
+
+# If we want to sync changes made in Repos to VScode
+```
+git pull
+```
