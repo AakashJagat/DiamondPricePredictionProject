@@ -20,3 +20,12 @@ git commit -m "This is my first commit"
 ```
 git pull
 ```
+
+```
+python setup.py install
+```
+# another way we can mention is -e . on our requirements.txt file we can run.
+
+```
+pip install -r requirements.txt
+```
