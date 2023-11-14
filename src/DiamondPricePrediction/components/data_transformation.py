@@ -6,7 +6,6 @@ import numpy as np
 
 from dataclasses import dataclass
 from src.DiamondPricePrediction.logger import logging
-from src.DiamondPricePrediction.components.data_ingestion import DataIngestion
 from src.DiamondPricePrediction.exception import customexception
 
 from sklearn.compose import ColumnTransformer
@@ -21,10 +20,10 @@ class DataTransformationConfig:
     preprocessor_obj_file_path = os.path.join('artifacts','preprocessor.pkl') 
 
 
-
 class DataTransformation:
     def __init__(self):
-        self.data_transformation_config = DataTransformation
+        self.data_transformation_config = DataTransformationConfig()
+
 
     def get_data_transformation(self):
         try:
@@ -70,14 +69,14 @@ class DataTransformation:
             logging.info("Exception occured at Data Transformation Stage")
             raise customexception(e, sys)
     
-    def initialize_data_transformation(self, train_path, test_path):
+    def initialize_data_transformation(self, train_path,test_path):
         try:
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
 
             logging.info("Read train and test data completed")
-            logging.info(f"Train DataFrame Head :/n {train_df.head().to_strings()}")
-            logging.info(f"Test DataFrame Head :/n {test_df.head().to_strings()}")
+            logging.info(f"Train DataFrame Head : \n{train_df.head().to_string()}")
+            logging.info(f"Test DataFrame Head : \n{test_df.head().to_string()}")
 
             preprocessing_obj = self.get_data_transformation()
 
@@ -87,6 +86,9 @@ class DataTransformation:
             input_feature_train_df = train_df.drop(columns=drop_columns, axis=1)
             target_feature_train_df = train_df[target_column_name]
 
+            input_feature_test_df = test_df.drop(columns=drop_columns, axis=1)
+            target_feature_test_df = test_df[target_column_name]
+
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
 
             # Here we are performing all the transformation on top if the test data - Validation
@@ -94,13 +96,22 @@ class DataTransformation:
 
             logging.info("Applying preprocessing obeject in training and test dataset")
 
+            train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
+            test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+
             save_object(
-                file_path = self.data_transformation_config.preprocessor_obj_file_path, 
-                obj = preprocessing_obj
+                file_path=self.data_transformation_config.preprocessor_obj_file_path, obj=preprocessing_obj
             )
             
+            logging.info('Preprocessing Pickle File Saved')
 
+            return(
+                train_arr,
+                test_arr
+            )
 
         except Exception as e:
             logging.info("Exception occured at Data Transformation Stage")
+            
             raise customexception(e, sys)
+        
