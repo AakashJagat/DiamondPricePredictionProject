@@ -1,10 +1,10 @@
-# Whenever we are pushing anything in oiut main branch then only we need to run this workflow. 
+# Whenever we are pushing anything in out main branch then only we need to run this workflow. 
 
 name: Build and push image to ECR
 on:
   push:
     branches:
-      - main
+      - master
 
 
 jobs:
