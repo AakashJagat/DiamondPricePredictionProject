@@ -1,10 +1,9 @@
-# Whenever we are pushing anything in out main branch then only we need to run this workflow. 
-
 name: Build and push image to ECR
 on:
   push:
     branches:
       - main
+
 
 
 jobs:
@@ -15,7 +14,7 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v2
     - name: Install Utilities
-      run:
+      run: |
         sudo apt-get update
         sudo apt-get install -y jq unzip
     - name: Configure AWS credentials
@@ -29,14 +28,9 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v1
     - name: Build, tag, and push image to Amazon ECR
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr-outputs.registry }}
-        ECR_REPOSITORY: github-sample
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: dimondpriceprediction
         IMAGE_TAG: latest
-      run:
+      run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-
-
-
-
