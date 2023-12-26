@@ -29,3 +29,9 @@ python setup.py install
 ```
 pip install -r requirements.txt
 ```
+
+# Run these commands as export inside terminal as env varibles
+
+# MLFLOW_TRACKING_URI=https://dagshub.com/AakashJagat/DiamondPricePredictionProject.mlflow \
+# MLFLOW_TRACKING_USERNAME=AakashJagat \
+# MLFLOW_TRACKING_PASSWORD=b3b68370ded8a8880c800313c39139f8b8a9c447  \
